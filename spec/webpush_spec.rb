@@ -1,6 +1,24 @@
 require 'spec_helper'
 
 describe Webpush do
+  let(:message) { JSON.generate({ body: 'body' }) }
+  let(:p256dh) { 'BJSoGlbnOdsRScNlGmzKirnX9gF7XG1rGgIwP_BkxUcnQ7U_ezqSxyyu_Ghs17nom_orwTYctWfj2ZJsbqNj748' }
+  let(:auth) { '2H6Lqvlpul3hdBqDNbCytw' }
+
+  let(:expected_body) { "m\x04\xF9X)\x10\xCC\xBF\xD5\x9B\xB7\xC5Yc`\xDA\xFCE\x13#i*a\xE8\xB2\xA2\xC5\xA2\x00Y\xB0\xAFT" }
+  let(:expected_headers) do
+    {
+      'Accept'=>'*/*',
+      'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+      'Content-Encoding'=>'aesgcm',
+      'Content-Type'=>'application/octet-stream',
+      'Crypto-Key'=>'dh=BDclQQTQwPjSTRiz_9sY-U1LqALL59IDfQmQfcUNzJHQLrQQGaLwxtv5YceTFrPz66C6SSrV-5wWv8oMX4BoSPw',
+      'Encryption'=>'salt=Dh0yTB2w1MRAwywNk4DYbg',
+      'Ttl'=>'2419200',
+      'User-Agent'=>'Ruby'
+    }
+  end
+
   it 'has a version number' do
     expect(Webpush::VERSION).not_to be nil
   end
@@ -26,7 +44,7 @@ describe Webpush do
         'User-Agent'=>'Ruby'
       }
     end
-    
+
     it 'calls the relevant service with the correct headers' do
       expect(Webpush).to receive(:encrypt).and_return(payload)
 
